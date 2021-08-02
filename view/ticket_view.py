@@ -18,6 +18,8 @@ class TicketView:
         for ticket in self.ticket_list:
             print(ticket.get_summary())
 
-    def display_single_ticket(self, ticket_id):
-        print(self.ticket_service.get_single_ticket(ticket_id)
-              )
+    def display_single_ticket(self):
+        user_input = input('Enter ticket ID: ')
+        self.validation_service.validate_view_single_ticket_input(
+            user_input=user_input)
+        print(self.ticket_service.get_single_ticket(ticket_id=user_input))

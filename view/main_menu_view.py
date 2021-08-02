@@ -30,6 +30,5 @@ class MainMenuView:
         elif user_input == '1':
             TicketView().display_tickets()
         elif user_input == '2':
-            user_input = input('Enter ticket ID: ')
-            TicketView().display_single_ticket(ticket_id=user_input)
+            TicketView().display_single_ticket()
             # TODO: Create specific exception for unexpected input

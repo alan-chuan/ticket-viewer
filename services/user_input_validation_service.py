@@ -10,3 +10,10 @@ class UserInputValidationService:
 
         else:
             raise Exception
+
+    def validate_view_single_ticket_input(self, user_input):
+        try:
+            int(user_input)
+            return
+        except ValueError as e:
+            raise ValueError(e)
