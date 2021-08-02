@@ -51,6 +51,7 @@ class TicketService:
         # get list of tickets
         ticket_list = data.get('tickets')
         # for every ticket json object
+        self.tickets = []
         for item in ticket_list:
             # create a ticket object
             ticket = Ticket(item.get('id'), item.get(

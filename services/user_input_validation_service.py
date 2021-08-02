@@ -5,10 +5,7 @@ class UserInputValidationService:
 
     def validate_main_menu_input(self, user_input):
 
-        if user_input in ['1', '2', 'q']:
-            return
-
-        else:
+        if user_input not in ['1', '2', 'q']:
             raise Exception
 
     def validate_view_single_ticket_input(self, user_input):
@@ -19,7 +16,5 @@ class UserInputValidationService:
             raise ValueError(e)
 
     def validate_display_tickets_input(self, user_input):
-        if user_input in ['n', 'p', 'm']:
-            return
-        else:
+        if user_input not in ['n', 'p', 'm']:
             raise Exception
