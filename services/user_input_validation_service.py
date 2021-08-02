@@ -17,3 +17,9 @@ class UserInputValidationService:
             return
         except ValueError as e:
             raise ValueError(e)
+
+    def validate_display_tickets_input(self, user_input):
+        if user_input in ['n', 'p', 'm']:
+            return
+        else:
+            raise Exception
