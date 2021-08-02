@@ -1,5 +1,6 @@
 from . import session_service
 from models.metadata import Metadata
+from models.ticket import Ticket
 
 
 class TicketService:
@@ -21,7 +22,7 @@ class TicketService:
         self.metadata = None
         self.session = session_service.SessionService().create_session()
 
-    def load_tickets(self, page_number, tickets_per_page):
+    def load_tickets_from_api(self, page_number, tickets_per_page):
         '''
         Loads all tickets of a given page
 
@@ -42,17 +43,23 @@ class TicketService:
             # TODO: Implement proper error handling for HTTPErrors
         data = r.json()
         # extract metadata from API call
-        current_page = data.get('current_page')
+        next_page = data.get('next_page')
         previous_page = data.get('previous_page')
         count = data.get('count')
         # create a metadata object
-        self.metadata = Metadata(current_page, previous_page, count)
+        self.metadata = Metadata(next_page, previous_page, count)
         # get list of tickets
-        self.tickets = data.get('tickets')
+        ticket_list = data.get('tickets')
+        # for every ticket json object
+        for item in ticket_list:
+            # create a ticket object
+            ticket = Ticket(item.get('id'), item.get(
+                'subject'), item.get('description'))
+            # append newly created ticket object to list
+            self.tickets.append(ticket)
 
-    def display_all_tickets(self):
-        for ticket in self.tickets:
-            print(ticket)
+    def get_all_tickets(self):
+        return self.tickets
 
     def load_single_ticket(self, subdomain, ticket_id):
         '''

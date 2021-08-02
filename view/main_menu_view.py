@@ -29,12 +29,17 @@ class MainMenuView:
         if user_input == 'q':
             sys.exit()
         elif user_input == '1':
-            # handle ticket loading service (multiple tickets)
-            self.ticket_service = ticket_service.TicketService()
-            self.ticket_service.load_tickets(
-                page_number=1, tickets_per_page=25)
-            self.ticket_service.display_all_tickets()
+            self.print_all_tickets()
         elif user_input == '2':
             # TODO: handle ticket loading service (single ticket)
             pass
             # TODO: Create specific exception for unexpected input
+
+    def print_all_tickets(self):
+        # handle ticket loading service (multiple tickets)
+        self.ticket_service = ticket_service.TicketService()
+        self.ticket_service.load_tickets_from_api(
+            page_number=1, tickets_per_page=25)
+        all_tickets = self.ticket_service.get_all_tickets()
+        for ticket in all_tickets:
+            print(ticket.get_ticket_details('summary'))
