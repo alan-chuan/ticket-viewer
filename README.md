@@ -19,6 +19,14 @@
 
    `$ pip install -r requirements.txt`
 
-5. Start the ticket viewer CLI application by running the following command:
+5. Create a config.py file in the top level of the ticket-viewer directory. The file should contain the following strings:
+
+   `SUBDOMAIN = xxxxx`
+
+   `EMAIL = 'xxxxx'`
+
+   `PASSWORD = 'xxxxx'`
+
+6. Start the ticket viewer CLI application by running the following command:
 
    `$ python3 app.py`
