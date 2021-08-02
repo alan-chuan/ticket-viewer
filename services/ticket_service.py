@@ -58,10 +58,23 @@ class TicketService:
             # append newly created ticket object to list
             self.tickets.append(ticket)
 
-    def get_all_tickets(self):
+    def get_ticket_list(self, page_number, tickets_per_page):
+        self.load_tickets_from_api(page_number, tickets_per_page)
         return self.tickets
 
-    def load_single_ticket(self, subdomain, ticket_id):
+    def get_single_ticket(self, ticket_id):
+        '''
+        Gets and returns a single ticket instance
+
+        Parameters
+        ----------
+            ticket_id : int
+                ticket id of the ticket to retrieve
+
+        '''
+        return self.load_single_ticket(ticket_id)
+
+    def load_single_ticket(self, ticket_id):
         '''
         Loads a single ticket from a given subdomain
 
@@ -69,16 +82,19 @@ class TicketService:
         ----------
             page_number : int
                 page number to retrieve tickets from
-            subdomain : int
-                subdomain to query from
             ticket_id : int
-                ticket id of the ticket to retrieve,
-
+                ticket id of the ticket to retrieve
         '''
         try:
             r = self.session.get(
-                f'https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')
+                f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')
+
             r.raise_for_status()
         except Exception as e:
             print(e)
             # TODO: Implement proper error handling for HTTPErrors
+        data = r.json()
+        ticket_data = data.get('ticket')
+        ticket = Ticket(ticket_data.get('id'), ticket_data.get(
+            'subject'), ticket_data.get('description'))
+        return ticket.get_detailed()

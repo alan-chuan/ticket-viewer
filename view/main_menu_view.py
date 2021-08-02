@@ -1,12 +1,11 @@
 import services.user_input_validation_service as user_input_validation_service
-from services import ticket_service
+from view.ticket_view import TicketView
 import sys
 
 
 class MainMenuView:
     def __init__(self):
         self.validation_service = user_input_validation_service.UserInputValidationService()
-        self.ticket_service = None
 
     def display_main_menu(self):
         """
@@ -29,17 +28,8 @@ class MainMenuView:
         if user_input == 'q':
             sys.exit()
         elif user_input == '1':
-            self.print_all_tickets()
+            TicketView().display_tickets()
         elif user_input == '2':
-            # TODO: handle ticket loading service (single ticket)
-            pass
+            user_input = input('Enter ticket ID: ')
+            TicketView().display_single_ticket(ticket_id=user_input)
             # TODO: Create specific exception for unexpected input
-
-    def print_all_tickets(self):
-        # handle ticket loading service (multiple tickets)
-        self.ticket_service = ticket_service.TicketService()
-        self.ticket_service.load_tickets_from_api(
-            page_number=1, tickets_per_page=25)
-        all_tickets = self.ticket_service.get_all_tickets()
-        for ticket in all_tickets:
-            print(ticket.get_ticket_details('summary'))
