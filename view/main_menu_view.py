@@ -1,4 +1,4 @@
-import services.user_input_validation_service as user_input_validation_service
+from services.user_input_validation_service import UserInputValidationService
 from view.ticket_view import TicketView
 import sys
 
@@ -14,7 +14,7 @@ class MainMenuView:
     '''
 
     def __init__(self):
-        self.validation_service = user_input_validation_service.UserInputValidationService()
+        self.validation_service = UserInputValidationService()
 
     def display_main_menu(self):
         """

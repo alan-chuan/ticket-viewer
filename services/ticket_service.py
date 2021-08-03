@@ -1,9 +1,7 @@
-import services.error_handling_service
-from . import session_service
+from session_service import SessionService
 from models.metadata import Metadata
 from models.ticket import Ticket
-from exceptions import *
-from . import error_handling_service
+from error_handling_service import ErrorHandlingService
 
 
 class TicketService:
@@ -23,8 +21,8 @@ class TicketService:
 
         self.tickets = []
         self.metadata = None
-        self.session = session_service.SessionService().create_session()
-        self.error_handling_service = error_handling_service.ErrorHandlingService()
+        self.session = SessionService().create_session()
+        self.error_handling_service = ErrorHandlingService()
 
     def get_ticket_list(self, page_number, tickets_per_page):
         '''
