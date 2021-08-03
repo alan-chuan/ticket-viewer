@@ -22,7 +22,7 @@ class TicketService:
         self.metadata = None
         self.session = session_service.SessionService().create_session()
 
-    def load_tickets_from_api(self, page_number, tickets_per_page):
+    def parse_tickets(self, page_number, tickets_per_page):
         '''
         Loads all tickets of a given page
 
@@ -35,8 +35,7 @@ class TicketService:
 
         '''
         try:
-            r = self.session.get(f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets.json', params={
-                'page': page_number, 'per_page': tickets_per_page})
+            r = self.load_all_tickets(page_number, tickets_per_page)
             r.raise_for_status()
         except Exception as e:
             print(e)
@@ -59,8 +58,12 @@ class TicketService:
             # append newly created ticket object to list
             self.tickets.append(ticket)
 
+    def load_all_tickets(self, page_number, tickets_per_page):
+        return self.session.get(f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets.json', params={
+            'page': page_number, 'per_page': tickets_per_page})
+
     def get_ticket_list(self, page_number, tickets_per_page):
-        self.load_tickets_from_api(page_number, tickets_per_page)
+        self.parse_tickets(page_number, tickets_per_page)
         return self.tickets
 
     def get_single_ticket(self, ticket_id):
@@ -73,9 +76,9 @@ class TicketService:
                 ticket id of the ticket to retrieve
 
         '''
-        return self.load_single_ticket(ticket_id)
+        return self.parse_single_ticket(ticket_id)
 
-    def load_single_ticket(self, ticket_id):
+    def parse_single_ticket(self, ticket_id):
         '''
         Loads a single ticket from a given subdomain
 
@@ -87,9 +90,7 @@ class TicketService:
                 ticket id of the ticket to retrieve
         '''
         try:
-            r = self.session.get(
-                f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')
-
+            r = self.load_single_ticket(ticket_id)
             r.raise_for_status()
         except Exception as e:
             print(e)
@@ -99,3 +100,7 @@ class TicketService:
         ticket = Ticket(ticket_data.get('id'), ticket_data.get(
             'subject'), ticket_data.get('description'))
         return ticket.get_detailed()
+
+    def load_single_ticket(self, ticket_id):
+        return self.session.get(
+            f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')

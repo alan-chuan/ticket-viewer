@@ -32,7 +32,7 @@ class Test(unittest.TestCase):
     def test_invalid_input_view_all_ticket(self):
         invalid_inputs = ['A', '143.1', '+`2', ' ', '\n', '#$$$']
         for input in invalid_inputs:
-            with self.assertRaises(ValueError):
+            with self.assertRaises(Exception):
                 UserInputValidationService().validate_display_tickets_input(input)
 
     def test_valid_input_view_all_ticket(self):
