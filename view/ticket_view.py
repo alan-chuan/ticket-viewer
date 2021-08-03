@@ -34,6 +34,10 @@ class TicketView:
             # call ticket_service.get_ticket_list to get a list of tickets
             self.ticket_list = self.ticket_service.get_ticket_list(
                 page_number=current_page, tickets_per_page=tickets_per_page)
+            if self.ticket_list is None:
+                print('Unable to retrieve ticket list. Check your subdomain url.')
+                return
+
             if len(self.ticket_list) == 0:
                 print('No tickets found. All your customers are happy! :)')
                 return
@@ -72,7 +76,10 @@ class TicketView:
                 user_input=user_input)
             print(
                 '==================================================================================')
-            print(self.ticket_service.get_single_ticket(ticket_id=user_input))
+            ticket = self.ticket_service.get_single_ticket(
+                ticket_id=user_input)
+            if ticket is not None:
+                print(ticket)
             print(
                 '==================================================================================')
         except TicketException as e:

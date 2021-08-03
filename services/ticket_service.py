@@ -44,8 +44,10 @@ class TicketService:
             r = self.load_all_tickets(page_number, tickets_per_page)
         except TimeoutError:
             self.error_handling_service.handle_timeout_error()
+            return
         except Exception:
             self.error_handling_service.connection_error_handler()
+            return
         try:
             r.raise_for_status()
         except Exception as e:

@@ -20,8 +20,8 @@ class ErrorHandlingService:
                 'Oops! Authorization failed. Please check your credentials and restart the program.')
             sys.exit(1)
         elif response.status_code == 404:
-            print('Ticket not found. Please check ticket ID.')
-            raise TicketException
+            print('Ticket not found or link is invalid. (Error 404)')
+            sys.exit(1)
 
         print('The request was sent successfully, but the tickets failed to load.')
         sys.exit(1)
