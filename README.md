@@ -1,6 +1,6 @@
 # ticket-viewer
 
-## Ticket Viewer is a CLI based application that displays Zendesk tickets.
+Ticket Viewer is a CLI based application that displays Zendesk tickets.
 
 ### How to Install
 
@@ -19,14 +19,16 @@
 
    `$ pip install -r requirements.txt`
 
-5. Create a config.py file in the top level of the ticket-viewer directory. The file should contain the following strings:
+5. Create a config.py file in the root of the project directory. The file should contain the following strings:
 
-   `SUBDOMAIN = xxxxx`
+   `SUBDOMAIN = 'xxxxx'`
 
    `EMAIL = 'xxxxx'`
 
    `PASSWORD = 'xxxxx'`
 
-6. Start the ticket viewer CLI application by running the following command:
+   **Note: I have emailed my personal config.py file to Sabrina Ginter**
+
+6. Start the Ticket Viewer CLI application by running the following command:
 
    `$ python3 app.py`
