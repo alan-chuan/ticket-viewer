@@ -1,6 +1,5 @@
 import services.user_input_validation_service as user_input_validation_service
 from view.ticket_view import TicketView
-from exceptions import *
 import sys
 
 

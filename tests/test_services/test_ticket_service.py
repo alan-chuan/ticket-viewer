@@ -1,3 +1,4 @@
+from logging import raiseExceptions
 from models.ticket import Ticket
 import unittest
 from unittest.mock import patch
@@ -20,6 +21,11 @@ class TestTicketService(unittest.TestCase):
             page_number=1, tickets_per_page=25)
         self.assertEquals(response.status_code, 200)
         self.assertTrue(response.json(), ticket_list_obj)
+
+    def test_raise_for_status_exception_caught(self):
+        with self.assertRaises(Exception):
+            with patch('services.ticket_service.TicketService.r.raise_for_status') as mock_raise:
+                mock_raise.return_value = raiseExceptions
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
+from services.error_handling_service import ErrorHandlingService
 import view.main_menu_view as main_menu_view
+import sys
 '''
 app.py is the main module which runs the Zendesk ticket viewer
 '''

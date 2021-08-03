@@ -8,7 +8,7 @@ from . import error_handling_service
 
 class TicketService:
     '''
-    This class is used to managed tickets retrieved
+    This class is used to manage tickets retrieved
 
     Methods
     -------
@@ -26,9 +26,9 @@ class TicketService:
         self.session = session_service.SessionService().create_session()
         self.error_handling_service = error_handling_service.ErrorHandlingService()
 
-    def parse_tickets(self, page_number, tickets_per_page):
+    def get_ticket_list(self, page_number, tickets_per_page):
         '''
-        Loads all tickets of a given page
+        Returns all tickets of a given page
 
         Parameters
         ----------
@@ -36,15 +36,57 @@ class TicketService:
                 page number to retrieve tickets from
             tickets_per_page : int
                 tickets to display in a page
+        Returns
+        ----------
+            The list of tickets retrieved
 
         '''
+        # Phase 1: Load all tickets from API
         try:
             r = self.load_all_tickets(page_number, tickets_per_page)
+        except TimeoutError:
+            self.error_handling_service.handle_timeout_error()
+        except Exception:
+            self.error_handling_service.connection_error_handler()
+        try:
             r.raise_for_status()
         except Exception as e:
             self.error_handling_service.load_ticket_handler(r)
             return
+        # Phase 2: Parse retrieved data
         data = r.json()
+        self.parse_all_tickets(data)
+
+        # Return after parsing successfully
+        return self.tickets
+
+    def load_all_tickets(self, page_number, tickets_per_page):
+        '''
+        Loads all tickets of a given page from Zendesk Tickets API
+
+        Parameters
+        ----------
+            page_number : int
+                page number to retrieve tickets from
+            tickets_per_page : int
+                tickets to display in a page
+        Returns
+        ----------
+            Response object
+        '''
+        return self.session.get(f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets.json', params={
+            'page': page_number, 'per_page': tickets_per_page})
+
+    def parse_all_tickets(self, data):
+        '''
+        Loads all tickets of a given page from Zendesk Tickets API
+
+        Parameters
+        ----------
+            data : json
+                the data to parse
+
+        '''
         # extract metadata from API call
         next_page = data.get('next_page')
         previous_page = data.get('previous_page')
@@ -62,50 +104,41 @@ class TicketService:
             # append newly created ticket object to list
             self.tickets.append(ticket)
 
-    def load_all_tickets(self, page_number, tickets_per_page):
-        return self.session.get(f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets.json', params={
-            'page': page_number, 'per_page': tickets_per_page})
-
-    def get_ticket_list(self, page_number, tickets_per_page):
-        self.parse_tickets(page_number, tickets_per_page)
-        return self.tickets
-
     def get_single_ticket(self, ticket_id):
         '''
-        Gets and returns a single ticket instance
+        Retrieves a single ticket with ticket_id
 
         Parameters
         ----------
             ticket_id : int
                 ticket id of the ticket to retrieve
-
-        '''
-        return self.parse_single_ticket(ticket_id)
-
-    def parse_single_ticket(self, ticket_id):
-        '''
-        Loads a single ticket from a given subdomain
-
-        Parameters
+        Returns
         ----------
-            page_number : int
-                page number to retrieve tickets from
-            ticket_id : int
-                ticket id of the ticket to retrieve
+        Ticket string in detailed format
         '''
+        # Phase 1: Load all tickets from API
         try:
             r = self.load_single_ticket(ticket_id)
+        except TimeoutError:
+            self.error_handling_service.timeout_error_handler()
+        except Exception:
+            self.error_handling_service.connection_error_handler()
+        try:
             r.raise_for_status()
         except Exception as e:
             self.error_handling_service.load_ticket_handler(r)
             return
-            # TODO: Implement proper error handling for HTTPErrors
         data = r.json()
-        ticket_data = data.get('ticket')
-        ticket = Ticket(ticket_data.get('id'), ticket_data.get(
-            'subject'), ticket_data.get('description'))
+        # Phase 2: Parse retrieved data
+        ticket = self.parse_single_ticket(data)
+        # Return after parsing successfully
         return ticket.get_detailed()
 
     def load_single_ticket(self, ticket_id):
         return self.session.get(
             f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')
+
+    def parse_single_ticket(self, data):
+        ticket_data = data.get('ticket')
+        return Ticket(ticket_data.get('id'), ticket_data.get(
+            'subject'), ticket_data.get('description'))

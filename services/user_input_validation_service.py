@@ -16,7 +16,8 @@ class UserInputValidationService:
         try:
             int(user_input)
             return
-        except ValueError as e:
+        except ValueError:
+            print('Please enter a valid integer ticket ID.')
             raise TicketException
 
     def validate_display_tickets_input(self, user_input, current_page, total_pages):
@@ -27,7 +28,6 @@ class UserInputValidationService:
         if current_page == total_pages and user_input == 'n':
             print('Already on last page, no next page available.')
             return
-
         if current_page == 1 and user_input == 'p':
             print('Already on first page, no previous page available.')
             return

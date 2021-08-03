@@ -1,11 +1,10 @@
+from exceptions import TicketException
+from models.ticket import Ticket
 from services.user_input_validation_service import UserInputValidationService
 import unittest
 
 
 class Test(unittest.TestCase):
-    def test_invalid_input_mm(self):
-        with self.assertRaises(Exception):
-            UserInputValidationService().validate_main_menu_input('ABCDE')
 
     def test_valid_input_mm(self):
         try:
@@ -16,9 +15,9 @@ class Test(unittest.TestCase):
             assert False
 
     def test_invalid_input_single_ticket(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TicketException):
             UserInputValidationService().validate_view_single_ticket_input('A')
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TicketException):
             UserInputValidationService().validate_view_single_ticket_input('391.2')
 
     def test_valid_input_single_ticket(self):
@@ -35,13 +34,13 @@ class Test(unittest.TestCase):
             with self.assertRaises(Exception):
                 UserInputValidationService().validate_display_tickets_input(input)
 
-    def test_valid_input_view_all_ticket(self):
-        try:
-            UserInputValidationService().validate_display_tickets_input('n')
-            UserInputValidationService().validate_display_tickets_input('p')
-            UserInputValidationService().validate_display_tickets_input('m')
-        except Exception:
-            assert False
+    # def test_valid_input_view_all_ticket(self):
+    #     try:
+    #         UserInputValidationService().validate_display_tickets_input('n')
+    #         UserInputValidationService().validate_display_tickets_input('p')
+    #         UserInputValidationService().validate_display_tickets_input('m')
+    #     except Exception:
+    #         assert False
 
 
 if __name__ == '__main__':
