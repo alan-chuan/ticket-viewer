@@ -1,5 +1,6 @@
 from exceptions import TicketException
 from models.ticket import Ticket
+from services import user_input_validation_service
 from services.user_input_validation_service import UserInputValidationService
 import unittest
 
@@ -7,24 +8,31 @@ import unittest
 class Test(unittest.TestCase):
 
     def test_valid_input_mm(self):
+        user_input_validation_service = UserInputValidationService()
         try:
-            UserInputValidationService().validate_main_menu_input('1')
-            UserInputValidationService().validate_main_menu_input('2')
-            UserInputValidationService().validate_main_menu_input('q')
+            for input in ['1', '2', 'q']:
+                user_input_validation_service.validate_main_menu_input(input)
         except Exception:
             assert False
 
     def test_invalid_input_single_ticket(self):
-        with self.assertRaises(TicketException):
-            UserInputValidationService().validate_view_single_ticket_input('A')
-        with self.assertRaises(TicketException):
-            UserInputValidationService().validate_view_single_ticket_input('391.2')
+        user_input_validation_service = UserInputValidationService()
+
+        try:
+            for input in ['A', '391.20', '`@_~']:
+                with self.assertRaises(TicketException):
+                    user_input_validation_service.validate_view_single_ticket_input(
+                        input)
+        except Exception:
+            assert False
 
     def test_valid_input_single_ticket(self):
+        user_input_validation_service = UserInputValidationService()
+
         try:
-            UserInputValidationService().validate_view_single_ticket_input('1143')
-            UserInputValidationService().validate_view_single_ticket_input('21')
-            UserInputValidationService().validate_view_single_ticket_input('3901')
+            for input in ['1143', '21', '3901']:
+                user_input_validation_service.validate_view_single_ticket_input(
+                    input)
         except Exception:
             assert False
 

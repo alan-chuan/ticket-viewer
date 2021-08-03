@@ -149,13 +149,9 @@ class TicketService:
         ----------
         Ticket object
         '''
-        try:
-            id = data.get('id')
-            subject = data.get('subject')
-            description = data.get('description')
-            created_at = data.get('created_at')
-            submitter_id = data.get('submitter_id')
-            return Ticket(id, subject, description, created_at, submitter_id)
-        except AttributeError:
-            print(
-                'Error getting an attribute, the ticket JSON object which was requested might have changed.')
+        id = data.get('id')
+        subject = data.get('subject')
+        description = data.get('description')
+        created_at = data.get('created_at')
+        submitter_id = data.get('submitter_id')
+        return Ticket(id, subject, description, created_at, submitter_id)

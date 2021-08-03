@@ -23,4 +23,16 @@ class TestErrorHandlingService(unittest.TestCase):
         error_handling_service = ErrorHandlingService()
         with self.assertRaises(SystemExit) as cm:
             error_handling_service.load_ticket_handler(response)
-        self.assertEqual(cm.exception.code, 1)
+            self.assertEqual(cm.exception.code, 1)
+
+    def test_timeout_error(self):
+        error_handling_service = ErrorHandlingService()
+        with self.assertRaises(SystemExit) as cm:
+            error_handling_service.timeout_error_handler()
+            self.assertEqual(cm.exception.code, 1)
+
+    def test_connection_error(self):
+        error_handling_service = ErrorHandlingService()
+        with self.assertRaises(SystemExit) as cm:
+            error_handling_service.connection_error_handler()
+            self.assertEqual(cm.exception.code, 1)
