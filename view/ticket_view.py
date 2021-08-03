@@ -6,27 +6,39 @@ import math
 
 
 class TicketView:
-    validation_service: UserInputValidationService
-    ticket_service: TicketService = None
-    ticket_list: list = None
+    '''
+        This class manages the view that is displayed if the user selects option [1] or [2] from the main menu.
+
+        Methods
+        ----------
+        display_tickets():
+            display all tickets
+        display_single()
+            display a single ticket
+    '''
 
     def __init__(self):
-        # handle ticket loading service (multiple tickets)
+        # handle ticket loading service
         self.ticket_service = TicketService()
         self.validation_service = UserInputValidationService()
+        self.ticket_list = []
 
     def display_tickets(self):  # Option 1
+        '''
+        This method displays all tickets when user selects option 1 from the main menu
+        '''
         current_page = 1
         tickets_per_page = 25
         while True:
             print("\n***** View all tickets *****")
-            ticket_list = self.ticket_service.get_ticket_list(
+            # call ticket_service.get_ticket_list to get a list of tickets
+            self.ticket_list = self.ticket_service.get_ticket_list(
                 page_number=current_page, tickets_per_page=tickets_per_page)
-            if len(ticket_list) == 0:
+            if len(self.ticket_list) == 0:
                 print('No tickets found. All your customers are happy! :)')
                 return
             else:
-                for ticket in ticket_list:
+                for ticket in self.ticket_list:
                     print(ticket.get_summary())
                 total_pages = self.ticket_service.metadata.count/tickets_per_page
                 print(
@@ -38,6 +50,7 @@ class TicketView:
                     print('[n] Next Page ->')
                 print('[m] Return to Main Menu')
                 user_input = input('Enter an option: ')
+                # validate user input
                 self.validation_service.validate_display_tickets_input(
                     user_input=user_input, current_page=current_page, total_pages=total_pages)
                 if user_input == 'p':
@@ -46,10 +59,13 @@ class TicketView:
                 elif user_input == 'n':
                     if current_page < total_pages:
                         current_page += 1
-                elif user_input == 'm':
+                if user_input == 'm':
                     break
 
-    def display_single_ticket(self):  # Option 2
+    def display_single_ticket(self):
+        '''
+        This method displays a single tickets when user selects option 2 from the main menu
+        '''
         user_input = input('Enter ticket ID: ')
         try:
             self.validation_service.validate_view_single_ticket_input(

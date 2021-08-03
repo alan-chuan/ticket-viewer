@@ -4,6 +4,15 @@ import sys
 
 
 class MainMenuView:
+    '''
+        This class manages the main menu view.
+
+        Methods
+        ----------
+        display_main_menu()
+            displays the main menu to the user
+    '''
+
     def __init__(self):
         self.validation_service = user_input_validation_service.UserInputValidationService()
 
