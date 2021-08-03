@@ -1,6 +1,9 @@
+import services.error_handling_service
 from . import session_service
 from models.metadata import Metadata
 from models.ticket import Ticket
+from exceptions import *
+from . import error_handling_service
 
 
 class TicketService:
@@ -21,6 +24,7 @@ class TicketService:
         self.tickets = []
         self.metadata = None
         self.session = session_service.SessionService().create_session()
+        self.error_handling_service = error_handling_service.ErrorHandlingService()
 
     def parse_tickets(self, page_number, tickets_per_page):
         '''
@@ -38,8 +42,8 @@ class TicketService:
             r = self.load_all_tickets(page_number, tickets_per_page)
             r.raise_for_status()
         except Exception as e:
-            print(e)
-            # TODO: Implement proper error handling for HTTPErrors
+            self.error_handling_service.load_ticket_handler(r)
+            return
         data = r.json()
         # extract metadata from API call
         next_page = data.get('next_page')
@@ -93,7 +97,8 @@ class TicketService:
             r = self.load_single_ticket(ticket_id)
             r.raise_for_status()
         except Exception as e:
-            print(e)
+            self.error_handling_service.load_ticket_handler(r)
+            return
             # TODO: Implement proper error handling for HTTPErrors
         data = r.json()
         ticket_data = data.get('ticket')
