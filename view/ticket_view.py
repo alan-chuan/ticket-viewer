@@ -54,6 +54,9 @@ class TicketView:
         try:
             self.validation_service.validate_view_single_ticket_input(
                 user_input=user_input)
+            print('==================================================================================')
             print(self.ticket_service.get_single_ticket(ticket_id=user_input))
+            print(
+                '==================================================================================')
         except TicketException as e:
             return

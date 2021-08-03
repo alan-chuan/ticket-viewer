@@ -29,18 +29,11 @@ class Test(unittest.TestCase):
             assert False
 
     def test_invalid_input_view_all_ticket(self):
-        invalid_inputs = ['A', '143.1', '+`2', ' ', '\n', '#$$$']
+        invalid_inputs = ['A', '143.1', '+`2', ' ',
+                          '\n', '#$$$', '1093842', 'p', 'i', ]
         for input in invalid_inputs:
             with self.assertRaises(Exception):
                 UserInputValidationService().validate_display_tickets_input(input)
-
-    # def test_valid_input_view_all_ticket(self):
-    #     try:
-    #         UserInputValidationService().validate_display_tickets_input('n')
-    #         UserInputValidationService().validate_display_tickets_input('p')
-    #         UserInputValidationService().validate_display_tickets_input('m')
-    #     except Exception:
-    #         assert False
 
 
 if __name__ == '__main__':

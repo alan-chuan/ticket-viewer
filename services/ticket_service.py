@@ -99,8 +99,7 @@ class TicketService:
         self.tickets = []
         for item in ticket_list:
             # create a ticket object
-            ticket = Ticket(item.get('id'), item.get(
-                'subject'), item.get('description'))
+            ticket = self.parse_single_ticket(item)
             # append newly created ticket object to list
             self.tickets.append(ticket)
 
@@ -130,7 +129,7 @@ class TicketService:
             return
         data = r.json()
         # Phase 2: Parse retrieved data
-        ticket = self.parse_single_ticket(data)
+        ticket = self.parse_single_ticket(data.get('ticket'))
         # Return after parsing successfully
         return ticket.get_detailed()
 
@@ -139,6 +138,24 @@ class TicketService:
             f'https://{session_service.SessionService().subdomain}.zendesk.com/api/v2/tickets/{ticket_id}.json')
 
     def parse_single_ticket(self, data):
-        ticket_data = data.get('ticket')
-        return Ticket(ticket_data.get('id'), ticket_data.get(
-            'subject'), ticket_data.get('description'))
+        '''
+        Parses a single ticket
+
+        Parameters
+        ----------
+            data : json
+                single ticket json object
+        Returns
+        ----------
+        Ticket object
+        '''
+        try:
+            id = data.get('id')
+            subject = data.get('subject')
+            description = data.get('description')
+            created_at = data.get('created_at')
+            submitter_id = data.get('submitter_id')
+            return Ticket(id, subject, description, created_at, submitter_id)
+        except AttributeError:
+            print(
+                'Error getting an attribute, the ticket JSON object which was requested might have changed.')
