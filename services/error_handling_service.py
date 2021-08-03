@@ -21,7 +21,7 @@ class ErrorHandlingService:
             sys.exit(1)
         elif response.status_code == 404:
             print('Ticket not found or link is invalid. (Error 404)')
-            sys.exit(1)
+            return
 
         print('The request was sent successfully, but the tickets failed to load.')
         sys.exit(1)
